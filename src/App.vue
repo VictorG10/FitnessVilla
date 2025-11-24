@@ -1,15 +1,18 @@
 <script setup>
+  import { ref } from "vue";
   import Layout from "./components/layouts/Layout.vue";
   import Dashboard from "./components/pages/Dashboard.vue";
   import Welcome from "./components/pages/Welcome.vue";
   import Workout from "./components/pages/Workout.vue";
+
+  const selectedDisplay = ref(3);
 </script>
 
 <template>
   <Layout>
-    <Welcome />
-    <Dashboard />
-    <Workout />
+    <Welcome v-if="selectedDisplay == 1" />
+    <Dashboard v-if="selectedDisplay == 2" />
+    <Workout v-if="selectedDisplay == 3" />
   </Layout>
 </template>
 
