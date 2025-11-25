@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+  defineProps({
+    handleChangeDisplay: Function,
+  });
+</script>
 
 <template>
   <section id="welcome">
@@ -27,7 +31,7 @@
       <h3>🔥 Your Challenge</h3>
       <p>Complete all the workouts and track your progress along the way!</p>
       <p>Do you accept?</p>
-      <button>Begin &rarr;</button>
+      <button @click="() => handleChangeDisplay(2)">Begin &rarr;</button>
     </div>
   </section>
 </template>

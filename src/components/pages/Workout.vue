@@ -3,11 +3,23 @@
   import { computed, ref } from "vue";
   import Portal from "../Portal.vue";
 
-  const selectedWorkout = 4;
+  const workType = ["Push", "Pull", "Leg"];
+
+  const { data, selectedWorkout, isWorkoutComplete, handleSaveWorkout } =
+    defineProps({
+      data: Object,
+      selectedWorkout: Number,
+      isWorkoutComplete: Boolean,
+      handleSaveWorkout: Function,
+    });
+
   const { workout, warmup } = workoutProgram[selectedWorkout];
 
   const selectedExercise = ref(null);
-  const exerciseDescription = exerciseDescriptions[selectedExercise.value];
+  console.log(selectedExercise.value);
+  const exerciseDescription = computed(() => {
+    return exerciseDescriptions[selectedExercise.value];
+  });
 
   const handleCloseModal = () => {
     selectedExercise.value = null;
@@ -27,16 +39,21 @@
       </button>
     </div>
   </Portal>
+
   <section id="workout-card">
     <div class="plan-card card">
       <div class="plan-card-header">
         <p>
           Day
-          {{ selectedWorkout < 9 ? "0" + selectedWorkout : selectedWorkout }}
+          {{
+            selectedWorkout < 9
+              ? "0" + (selectedWorkout + 1)
+              : selectedWorkout + 1
+          }}
         </p>
         <i class="fa-solid fa-dumbbell"></i>
       </div>
-      <h2>{{ "Push" }} Workout</h2>
+      <h2>{{ workType[selectedWorkout % 3] }} Workout</h2>
     </div>
 
     <div class="workout-grid">
@@ -51,7 +68,7 @@
           <button
             @click="
               () => {
-                console.log('I have clicked');
+                console.log('I have clicked', w.name);
                 selectedExercise = w.name;
               }
             "
@@ -76,8 +93,8 @@
           <button
             @click="
               () => {
-                console.log('I have clicked');
-                selectedExercise.value = w.name;
+                console.log('I have clicked', w.name);
+                selectedExercise = w.name;
               }
             "
           >
@@ -86,13 +103,22 @@
         </div>
         <p>{{ w.sets }}</p>
         <p>{{ w.reps }}</p>
-        <input type="text" class="grid-weights" placeholder="14kg" />
+        <input
+          type="text"
+          v-model="data[selectedWorkout][w.name]"
+          class="grid-weights"
+          placeholder="14kg"
+        />
       </div>
     </div>
 
     <div class="card workout-btns">
-      <button>Save & Exit <i class="fa-solid fa-save"></i></button>
-      <button>Complete <i class="fa-solid fa-check"></i></button>
+      <button @click="handleSaveWorkout">
+        Save & Exit <i class="fa-solid fa-save"></i>
+      </button>
+      <button :disabled="!isWorkoutComplete" @click="handleSaveWorkout">
+        Complete <i class="fa-solid fa-check"></i>
+      </button>
     </div>
   </section>
 </template>
@@ -125,6 +151,13 @@
   .workout-grid-row,
   .workout-grid-line {
     grid-column: span 7 / span 7;
+  }
+
+  .workout-grid-line {
+    margin: 0.5rem 0;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--background-muted);
   }
 
   .grid-name {
