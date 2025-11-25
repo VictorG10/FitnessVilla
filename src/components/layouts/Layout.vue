@@ -68,4 +68,16 @@
     aspect-ratio: 1/1;
     border-radius: 100%;
   }
+
+  @media (min-width: 640px) {
+    header,
+    main,
+    footer {
+      padding: 2rem;
+    }
+
+    footer a img {
+      max-width: 40px;
+    }
+  }
 </style>
